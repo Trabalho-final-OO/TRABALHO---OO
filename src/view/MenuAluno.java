@@ -1,12 +1,10 @@
 package view;
-
 import javax.swing.JOptionPane;
 
 import app.Aluno;
 import cadastros.CadastroAluno;
 
 public class MenuAluno {
-
     public static Aluno dadosNovoAluno() {
         String nome = lerNome();
         String cpf = lerCPF();
@@ -86,6 +84,5 @@ public class MenuAluno {
         } while (opcao != 0);
         return;
     }
-
 
 }

@@ -1,9 +1,6 @@
 package view;
-
 import javax.swing.JOptionPane;
-
 public class MenuPrincipal {
-
     public static int menuOpcoes() {
         String opcoes = "1 - Abrir cadastro de alunos \n"
                 + "2 - Abrir cadastro de professores \n"

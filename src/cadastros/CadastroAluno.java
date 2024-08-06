@@ -1,11 +1,10 @@
 package cadastros;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import app.Aluno;
-
 public class CadastroAluno {
+
     int numAlunos;
     private List<Aluno> alunos;
 
@@ -48,4 +47,6 @@ public class CadastroAluno {
         }
         return resposta;
     }
+
+
 }
