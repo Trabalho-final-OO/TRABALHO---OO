@@ -15,6 +15,7 @@ public class MenuTurma {
                 + "2 - Pesquisar turma\n"
                 + "3 - Atualizar turma\n"
                 + "4 - Remover turma\n"
+                + "5 - Imprimir lista de presença\n"
                 + "0 - Voltar para menu anterior";
 
         int opcao = -1;
@@ -74,6 +75,16 @@ public class MenuTurma {
                     }
                     break;
 
+                case 5:
+                    codigoTurma = lerCodigoTurma();
+                    Turma turma = cadTurma.pesquisarTurma(codigoTurma);
+                    if (turma != null) {
+                        imprimirListaPresenca(turma);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Turma não encontrada.");
+                    }
+                    break;
+
                 default:
                     if (opcao != 0) {
                         JOptionPane.showMessageDialog(null, "Opção inválida.");
@@ -116,5 +127,17 @@ public class MenuTurma {
 
     private static String lerSalaTurma() {
         return JOptionPane.showInputDialog("Informe a sala da turma: ");
+    }
+
+    private static void imprimirListaPresenca(Turma turma) {
+        StringBuilder listaPresenca = new StringBuilder();
+        listaPresenca.append("Disciplina: ").append(turma.getDisciplinaMinistrada()).append("\n");
+        listaPresenca.append("Código da Turma: ").append(turma.getCodigoTurma()).append("\n");
+        listaPresenca.append("Professor: ").append(turma.getProfessorTurma()).append("\n");
+        listaPresenca.append("Horário: ").append(turma.getHoraTurma()).append("\n");
+        listaPresenca.append("Sala: ").append(turma.getSalaTurma()).append("\n");
+        listaPresenca.append("Aluno(s): ").append(turma.getAlunoTurma()).append("\n");
+
+        JOptionPane.showMessageDialog(null, listaPresenca.toString());
     }
 }

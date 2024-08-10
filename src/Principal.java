@@ -11,7 +11,7 @@ import view.MenuTurma;
 import Exceptions.CampoEmBrancoException;
 import Exceptions.DisciplinaNaoAtribuidaException;
 import Exceptions.ProfessorNaoAtribuidoException;
-public class Principal {
+public class  Principal {
 
     static CadastroAluno cadAluno;
     static CadastroProfessor cadProf;
