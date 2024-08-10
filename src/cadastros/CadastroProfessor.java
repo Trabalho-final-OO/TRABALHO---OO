@@ -3,6 +3,7 @@ package cadastros;
 import java.util.ArrayList;
 import java.util.List;
 import app.Professor;
+import Exceptions.CampoEmBrancoException;
 
 public class CadastroProfessor extends Cadastros {
 
@@ -14,7 +15,13 @@ public class CadastroProfessor extends Cadastros {
         professores = new ArrayList<Professor>();
     }
 
-    public int cadastrarProfessor(Professor p) {
+    public int cadastrarProfessor(Professor p) throws CampoEmBrancoException {
+        if (p.getNome() == null || p.getNome().trim().isEmpty()) {
+            throw new CampoEmBrancoException("Nome do professor não pode estar em branco.");
+        }
+        if (p.getMatriculaFUB() == null || p.getMatriculaFUB().trim().isEmpty()) {
+            throw new CampoEmBrancoException("Matrícula FUB do professor não pode estar em branco.");
+        }
         boolean cadastrou = professores.add(p);
         if (cadastrou) {
             numProfessores = professores.size();
@@ -39,7 +46,13 @@ public class CadastroProfessor extends Cadastros {
         return removeu;
     }
 
-    public boolean atualizarProfessor(String matricula, Professor p) {
+    public boolean atualizarProfessor(String matricula, Professor p) throws CampoEmBrancoException {
+        if (p.getNome() == null || p.getNome().trim().isEmpty()) {
+            throw new CampoEmBrancoException("Nome do professor não pode estar em branco.");
+        }
+        if (p.getMatriculaFUB() == null || p.getMatriculaFUB().trim().isEmpty()) {
+            throw new CampoEmBrancoException("Matrícula FUB do professor não pode estar em branco.");
+        }
         boolean resposta = false;
         Professor remover = pesquisarProfessor(matricula);
         if (remover != null) {
@@ -49,7 +62,7 @@ public class CadastroProfessor extends Cadastros {
         return resposta;
     }
 
-    public int cadastrar(Object o) {
+    public int cadastrar(Object o) throws CampoEmBrancoException {
         return cadastrarProfessor((Professor) o);
     }
 
@@ -61,7 +74,7 @@ public class CadastroProfessor extends Cadastros {
         return removerProfessor((Professor) o);
     }
 
-    public boolean atualizar(String matricula, Object o) {
+    public boolean atualizar(String matricula, Object o) throws CampoEmBrancoException {
         return atualizarProfessor(matricula, (Professor) o);
     }
 }

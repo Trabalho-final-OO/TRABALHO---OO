@@ -2,19 +2,11 @@ package cadastros;
 
 public abstract class Cadastros {
 
-    public int cadastrar(Object o) {
-        return 0;
-    }
+    public abstract int cadastrar(Object o) throws Exception;
 
-    public Object pesquisar(String s) {
-        return null;
-    }
+    public abstract Object pesquisar(String s);
 
-    public boolean remover(Object o) {
-        return false;
-    }
+    public abstract boolean remover(Object o);
 
-    public boolean atualizar(String codigo, Object o) {
-        return false;
-    }
+    public abstract boolean atualizar(String codigo, Object o) throws Exception;
 }

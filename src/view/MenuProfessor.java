@@ -1,9 +1,9 @@
 package view;
 
 import javax.swing.JOptionPane;
-
 import app.Professor;
 import cadastros.CadastroProfessor;
+import Exceptions.CampoEmBrancoException;
 
 public class MenuProfessor {
 
@@ -22,41 +22,63 @@ public class MenuProfessor {
 
             switch (opcao) {
                 case 1:
-                    Professor novoProfessor = dadosNovoProfessor();
-                    cadProf.cadastrarProfessor(novoProfessor);
+                    try {
+                        Professor novoProfessor = dadosNovoProfessor();
+                        cadProf.cadastrarProfessor(novoProfessor);
+                        JOptionPane.showMessageDialog(null, "Professor cadastrado com sucesso!");
+                    } catch (CampoEmBrancoException e) {
+                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                    }
                     break;
 
                 case 2:
                     String matriculaFUB = lerMatriculaFUB();
                     Professor p = cadProf.pesquisarProfessor(matriculaFUB);
-                    if (p != null)
+                    if (p != null) {
                         JOptionPane.showMessageDialog(null, p.toString());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Professor não encontrado.");
+                    }
                     break;
 
                 case 3:
-                    matriculaFUB = lerMatriculaFUB();
-                    Professor novoCadastro = dadosNovoProfessor();
-                    boolean atualizado = cadProf.atualizarProfessor(matriculaFUB, novoCadastro);
-                    if (atualizado) {
-                        JOptionPane.showMessageDialog(null, "Cadastro atualizado.");
+                    try {
+                        matriculaFUB = lerMatriculaFUB();
+                        Professor novoCadastro = dadosNovoProfessor();
+                        boolean atualizado = cadProf.atualizarProfessor(matriculaFUB, novoCadastro);
+                        if (atualizado) {
+                            JOptionPane.showMessageDialog(null, "Cadastro atualizado.");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Professor não encontrado.");
+                        }
+                    } catch (CampoEmBrancoException e) {
+                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
                     }
                     break;
 
                 case 4:
                     matriculaFUB = lerMatriculaFUB();
                     Professor remover = cadProf.pesquisarProfessor(matriculaFUB);
-                    boolean removido = cadProf.removerProfessor(remover);
-                    if (removido) {
-                        JOptionPane.showMessageDialog(null, "Professor removido do cadastro");
-                        System.gc();
+                    if (remover != null) {
+                        boolean removido = cadProf.removerProfessor(remover);
+                        if (removido) {
+                            JOptionPane.showMessageDialog(null, "Professor removido do cadastro");
+                            System.gc();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Erro ao remover o professor.");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Professor não encontrado.");
                     }
                     break;
 
                 default:
+                    if (opcao != 0) {
+                        JOptionPane.showMessageDialog(null, "Opção inválida.");
+                    }
                     break;
             }
         } while (opcao != 0);
-        return;
     }
 
     public static Professor dadosNovoProfessor() {

@@ -2,8 +2,8 @@ package app;
 
 public class Professor extends PessoaFisica {
 
-    String areaFormacao,
-            matriculaFUB;
+    private String areaFormacao;
+    private String matriculaFUB;
 
     public Professor(String nome, String cpf, String email, String areaFormacao, String matriculaFUB) {
         super(nome, cpf, email);
@@ -11,16 +11,23 @@ public class Professor extends PessoaFisica {
         this.matriculaFUB = matriculaFUB;
     }
 
-    public final String getAreaFormacao() {
+
+    public String getAreaFormacao() {
         return areaFormacao;
     }
 
-    public final String getMatriculaFUB() {
+    public String getMatriculaFUB() {
         return matriculaFUB;
     }
 
 
-    public final String getMatricula() {
-        return getMatriculaFUB();
+
+    public void setAreaFormacao(String areaFormacao) {
+        this.areaFormacao = areaFormacao;
+    }
+
+    public void setMatriculaFUB(String matriculaFUB) {
+        this.matriculaFUB = matriculaFUB;
     }
 }
+

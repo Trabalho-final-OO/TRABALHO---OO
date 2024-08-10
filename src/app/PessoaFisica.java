@@ -2,9 +2,9 @@ package app;
 
 public class PessoaFisica {
 
-    private String nome,
-            cpf,
-            email;
+    private String nome;
+    private String cpf;
+    private String email;
 
     public PessoaFisica(String nome, String cpf, String email) {
         this.nome = nome;

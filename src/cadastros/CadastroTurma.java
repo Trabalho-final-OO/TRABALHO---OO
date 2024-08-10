@@ -3,6 +3,9 @@ package cadastros;
 import java.util.ArrayList;
 import java.util.List;
 import app.Turma;
+import Exceptions.CampoEmBrancoException;
+import Exceptions.DisciplinaNaoAtribuidaException;
+import Exceptions.ProfessorNaoAtribuidoException;
 
 public class CadastroTurma extends Cadastros {
 
@@ -14,7 +17,16 @@ public class CadastroTurma extends Cadastros {
         turmas = new ArrayList<Turma>();
     }
 
-    public int cadastrarTurma(Turma t) {
+    public int cadastrarTurma(Turma t) throws CampoEmBrancoException, DisciplinaNaoAtribuidaException, ProfessorNaoAtribuidoException {
+        if (t.getDisciplinaMinistrada() == null || t.getDisciplinaMinistrada().trim().isEmpty()) {
+            throw new DisciplinaNaoAtribuidaException("A turma deve ter uma disciplina atribuída.");
+        }
+        if (t.getProfessorTurma() == null || t.getProfessorTurma().trim().isEmpty()) {
+            throw new ProfessorNaoAtribuidoException("A turma deve ter um professor atribuído.");
+        }
+        if (t.getAlunoTurma() == null || t.getAlunoTurma().trim().isEmpty()) {
+            throw new CampoEmBrancoException("A turma deve ter pelo menos um aluno.");
+        }
         boolean cadastrou = turmas.add(t);
         if (cadastrou) {
             numTurmas = turmas.size();
@@ -39,7 +51,16 @@ public class CadastroTurma extends Cadastros {
         return removeu;
     }
 
-    public boolean atualizarTurma(int codigoTurma, Turma t) {
+    public boolean atualizarTurma(int codigoTurma, Turma t) throws CampoEmBrancoException, DisciplinaNaoAtribuidaException, ProfessorNaoAtribuidoException {
+        if (t.getDisciplinaMinistrada() == null || t.getDisciplinaMinistrada().trim().isEmpty()) {
+            throw new DisciplinaNaoAtribuidaException("A turma deve ter uma disciplina atribuída.");
+        }
+        if (t.getProfessorTurma() == null || t.getProfessorTurma().trim().isEmpty()) {
+            throw new ProfessorNaoAtribuidoException("A turma deve ter um professor atribuído.");
+        }
+        if (t.getAlunoTurma() == null || t.getAlunoTurma().trim().isEmpty()) {
+            throw new CampoEmBrancoException("A turma deve ter pelo menos um aluno.");
+        }
         boolean resposta = false;
         Turma remover = pesquisarTurma(codigoTurma);
         if (remover != null) {
@@ -49,7 +70,7 @@ public class CadastroTurma extends Cadastros {
         return resposta;
     }
 
-    public int cadastrar(Object o) {
+    public int cadastrar(Object o) throws CampoEmBrancoException, DisciplinaNaoAtribuidaException, ProfessorNaoAtribuidoException {
         return cadastrarTurma((Turma) o);
     }
 
@@ -61,7 +82,7 @@ public class CadastroTurma extends Cadastros {
         return removerTurma((Turma) o);
     }
 
-    public boolean atualizar(String codigo, Object o) {
-        return atualizarTurma(Integer.parseInt(codigo), (Turma) o); // Convertendo String para int
+    public boolean atualizar(String codigo, Object o) throws CampoEmBrancoException, DisciplinaNaoAtribuidaException, ProfessorNaoAtribuidoException {
+        return atualizarTurma(Integer.parseInt(codigo), (Turma) o);
     }
 }

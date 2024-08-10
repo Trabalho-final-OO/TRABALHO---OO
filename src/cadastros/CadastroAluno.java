@@ -3,6 +3,7 @@ package cadastros;
 import java.util.ArrayList;
 import java.util.List;
 import app.Aluno;
+import Exceptions.CampoEmBrancoException;
 
 public class CadastroAluno extends Cadastros {
 
@@ -14,7 +15,13 @@ public class CadastroAluno extends Cadastros {
         alunos = new ArrayList<Aluno>();
     }
 
-    public int cadastrarAluno(Aluno a) {
+    public int cadastrarAluno(Aluno a) throws CampoEmBrancoException {
+        if (a.getNome() == null || a.getNome().trim().isEmpty()) {
+            throw new CampoEmBrancoException("Nome do aluno não pode estar em branco.");
+        }
+        if (a.getMatricula() == null || a.getMatricula().trim().isEmpty()) {
+            throw new CampoEmBrancoException("Matrícula do aluno não pode estar em branco.");
+        }
         boolean cadastrou = alunos.add(a);
         if (cadastrou) {
             numAlunos = alunos.size();
@@ -39,7 +46,13 @@ public class CadastroAluno extends Cadastros {
         return removeu;
     }
 
-    public boolean atualizarAluno(String matricula, Aluno a) {
+    public boolean atualizarAluno(String matricula, Aluno a) throws CampoEmBrancoException {
+        if (a.getNome() == null || a.getNome().trim().isEmpty()) {
+            throw new CampoEmBrancoException("Nome do aluno não pode estar em branco.");
+        }
+        if (a.getMatricula() == null || a.getMatricula().trim().isEmpty()) {
+            throw new CampoEmBrancoException("Matrícula do aluno não pode estar em branco.");
+        }
         boolean resposta = false;
         Aluno remover = pesquisarAluno(matricula);
         if (remover != null) {
@@ -49,7 +62,7 @@ public class CadastroAluno extends Cadastros {
         return resposta;
     }
 
-    public int cadastrar(Object o) {
+    public int cadastrar(Object o) throws CampoEmBrancoException {
         return cadastrarAluno((Aluno) o);
     }
 
@@ -61,8 +74,7 @@ public class CadastroAluno extends Cadastros {
         return removerAluno((Aluno) o);
     }
 
-    public boolean atualizar(String matricula, Object o) {
+    public boolean atualizar(String matricula, Object o) throws CampoEmBrancoException {
         return atualizarAluno(matricula, (Aluno) o);
     }
 }
-

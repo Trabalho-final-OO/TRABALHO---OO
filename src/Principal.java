@@ -8,7 +8,9 @@ import view.MenuPrincipal;
 import view.MenuProfessor;
 import view.MenuDisciplina;
 import view.MenuTurma;
-
+import Exceptions.CampoEmBrancoException;
+import Exceptions.DisciplinaNaoAtribuidaException;
+import Exceptions.ProfessorNaoAtribuidoException;
 public class Principal {
 
     static CadastroAluno cadAluno;
@@ -16,7 +18,7 @@ public class Principal {
     static CadastroDisciplina cadDisc;
     static CadastroTurma cadTurma;
 
-    public static void main(String[] args) {
+    public static void main(String[] args)throws CampoEmBrancoException, DisciplinaNaoAtribuidaException, ProfessorNaoAtribuidoException {
         cadAluno = new CadastroAluno();
         cadProf = new CadastroProfessor();
         cadDisc = new CadastroDisciplina();

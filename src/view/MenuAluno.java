@@ -1,10 +1,12 @@
 package view;
-import javax.swing.JOptionPane;
 
+import javax.swing.JOptionPane;
 import app.Aluno;
 import cadastros.CadastroAluno;
+import Exceptions.CampoEmBrancoException;
 
 public class MenuAluno {
+
     public static Aluno dadosNovoAluno() {
         String nome = lerNome();
         String cpf = lerCPF();
@@ -31,7 +33,7 @@ public class MenuAluno {
     }
 
     private static String lerMatricula() {
-        return JOptionPane.showInputDialog("Informe a matricula do aluno: ");
+        return JOptionPane.showInputDialog("Informe a matrícula do aluno: ");
     }
 
     public static void menuAluno(CadastroAluno cadAluno) {
@@ -42,47 +44,70 @@ public class MenuAluno {
                 + "4 - Remover aluno\n"
                 + "0 - Voltar para menu anterior";
 
-        int opcao=-1;
+        int opcao = -1;
         do {
             String strOpcao = JOptionPane.showInputDialog(txt);
             opcao = Integer.parseInt(strOpcao);
 
             switch (opcao) {
                 case 1:
-                    Aluno novoAluno = dadosNovoAluno();
-                    cadAluno.cadastrarAluno(novoAluno);
+                    try {
+                        Aluno novoAluno = dadosNovoAluno();
+                        cadAluno.cadastrarAluno(novoAluno);
+                        JOptionPane.showMessageDialog(null, "Aluno cadastrado com sucesso!");
+                    } catch (CampoEmBrancoException e) {
+                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                    }
                     break;
 
                 case 2:
                     String matricula = lerMatricula();
                     Aluno a = cadAluno.pesquisarAluno(matricula);
-                    if (a != null)
+                    if (a != null) {
                         JOptionPane.showMessageDialog(null, a.toString());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Aluno não encontrado.");
+                    }
                     break;
 
                 case 3:
-                    matricula = lerMatricula();
-                    Aluno novoCadastro = dadosNovoAluno();
-                    boolean atualizado = cadAluno.atualizarAluno(matricula, novoCadastro);
-                    if (atualizado) {
-                        JOptionPane.showMessageDialog(null, "Cadastro atualizado.");
+                    try {
+                        matricula = lerMatricula();
+                        Aluno novoCadastro = dadosNovoAluno();
+                        boolean atualizado = cadAluno.atualizarAluno(matricula, novoCadastro);
+                        if (atualizado) {
+                            JOptionPane.showMessageDialog(null, "Cadastro atualizado.");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Aluno não encontrado.");
+                        }
+                    } catch (CampoEmBrancoException e) {
+                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
                     }
                     break;
 
                 case 4:
                     matricula = lerMatricula();
                     Aluno remover = cadAluno.pesquisarAluno(matricula);
-                    boolean removido = cadAluno.removerAluno(remover);
-                    if (removido) {
-                        JOptionPane.showMessageDialog(null, "Aluno removido do cadastro");
-                        System.gc();
+                    if (remover != null) {
+                        boolean removido = cadAluno.removerAluno(remover);
+                        if (removido) {
+                            JOptionPane.showMessageDialog(null, "Aluno removido do cadastro");
+                            System.gc();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Erro ao remover o aluno.");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Aluno não encontrado.");
                     }
+                    break;
 
                 default:
+                    if (opcao != 0) {
+                        JOptionPane.showMessageDialog(null, "Opção inválida.");
+                    }
                     break;
             }
         } while (opcao != 0);
-        return;
     }
-
 }
+

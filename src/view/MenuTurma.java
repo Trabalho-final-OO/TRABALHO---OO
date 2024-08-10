@@ -3,6 +3,9 @@ package view;
 import javax.swing.JOptionPane;
 import app.Turma;
 import cadastros.CadastroTurma;
+import Exceptions.CampoEmBrancoException;
+import Exceptions.DisciplinaNaoAtribuidaException;
+import Exceptions.ProfessorNaoAtribuidoException;
 
 public class MenuTurma {
 
@@ -21,41 +24,63 @@ public class MenuTurma {
 
             switch (opcao) {
                 case 1:
-                    Turma novaTurma = dadosNovaTurma();
-                    cadTurma.cadastrarTurma(novaTurma);
+                    try {
+                        Turma novaTurma = dadosNovaTurma();
+                        cadTurma.cadastrarTurma(novaTurma);
+                        JOptionPane.showMessageDialog(null, "Turma cadastrada com sucesso!");
+                    } catch (CampoEmBrancoException | DisciplinaNaoAtribuidaException | ProfessorNaoAtribuidoException e) {
+                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                    }
                     break;
 
                 case 2:
                     int codigoTurma = lerCodigoTurma();
                     Turma t = cadTurma.pesquisarTurma(codigoTurma);
-                    if (t != null)
+                    if (t != null) {
                         JOptionPane.showMessageDialog(null, t.toString());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Turma não encontrada.");
+                    }
                     break;
 
                 case 3:
-                    codigoTurma = lerCodigoTurma();
-                    Turma novoCadastro = dadosNovaTurma();
-                    boolean atualizado = cadTurma.atualizarTurma(codigoTurma, novoCadastro);
-                    if (atualizado) {
-                        JOptionPane.showMessageDialog(null, "Cadastro atualizado.");
+                    try {
+                        codigoTurma = lerCodigoTurma();
+                        Turma novoCadastro = dadosNovaTurma();
+                        boolean atualizado = cadTurma.atualizarTurma(codigoTurma, novoCadastro);
+                        if (atualizado) {
+                            JOptionPane.showMessageDialog(null, "Cadastro atualizado.");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Turma não encontrada.");
+                        }
+                    } catch (CampoEmBrancoException | DisciplinaNaoAtribuidaException | ProfessorNaoAtribuidoException e) {
+                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
                     }
                     break;
 
                 case 4:
                     codigoTurma = lerCodigoTurma();
                     Turma remover = cadTurma.pesquisarTurma(codigoTurma);
-                    boolean removido = cadTurma.removerTurma(remover);
-                    if (removido) {
-                        JOptionPane.showMessageDialog(null, "Turma removida do cadastro");
-                        System.gc();
+                    if (remover != null) {
+                        boolean removido = cadTurma.removerTurma(remover);
+                        if (removido) {
+                            JOptionPane.showMessageDialog(null, "Turma removida do cadastro");
+                            System.gc();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Erro ao remover a turma.");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Turma não encontrada.");
                     }
                     break;
 
                 default:
+                    if (opcao != 0) {
+                        JOptionPane.showMessageDialog(null, "Opção inválida.");
+                    }
                     break;
             }
         } while (opcao != 0);
-        return;
     }
 
     public static Turma dadosNovaTurma() {

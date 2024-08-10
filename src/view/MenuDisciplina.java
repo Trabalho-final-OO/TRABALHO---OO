@@ -1,9 +1,9 @@
 package view;
 
 import javax.swing.JOptionPane;
-
 import app.Disciplina;
 import cadastros.CadastroDisciplina;
+import Exceptions.CampoEmBrancoException;
 
 public class MenuDisciplina {
 
@@ -22,41 +22,63 @@ public class MenuDisciplina {
 
             switch (opcao) {
                 case 1:
-                    Disciplina novaDisciplina = dadosNovaDisciplina();
-                    cadDisciplina.cadastrarDisciplina(novaDisciplina);
+                    try {
+                        Disciplina novaDisciplina = dadosNovaDisciplina();
+                        cadDisciplina.cadastrarDisciplina(novaDisciplina);
+                        JOptionPane.showMessageDialog(null, "Disciplina cadastrada com sucesso!");
+                    } catch (CampoEmBrancoException e) {
+                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                    }
                     break;
 
                 case 2:
                     String codigoDisciplina = lerCodigoDisciplina();
                     Disciplina d = cadDisciplina.pesquisarDisciplina(codigoDisciplina);
-                    if (d != null)
+                    if (d != null) {
                         JOptionPane.showMessageDialog(null, d.toString());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Disciplina não encontrada.");
+                    }
                     break;
 
                 case 3:
-                    codigoDisciplina = lerCodigoDisciplina();
-                    Disciplina novoCadastro = dadosNovaDisciplina();
-                    boolean atualizado = cadDisciplina.atualizarDisciplina(codigoDisciplina, novoCadastro);
-                    if (atualizado) {
-                        JOptionPane.showMessageDialog(null, "Cadastro atualizado.");
+                    try {
+                        codigoDisciplina = lerCodigoDisciplina();
+                        Disciplina novoCadastro = dadosNovaDisciplina();
+                        boolean atualizado = cadDisciplina.atualizarDisciplina(codigoDisciplina, novoCadastro);
+                        if (atualizado) {
+                            JOptionPane.showMessageDialog(null, "Cadastro atualizado.");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Disciplina não encontrada.");
+                        }
+                    } catch (CampoEmBrancoException e) {
+                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
                     }
                     break;
 
                 case 4:
                     codigoDisciplina = lerCodigoDisciplina();
                     Disciplina remover = cadDisciplina.pesquisarDisciplina(codigoDisciplina);
-                    boolean removido = cadDisciplina.removerDisciplina(remover);
-                    if (removido) {
-                        JOptionPane.showMessageDialog(null, "Disciplina removida do cadastro");
-                        System.gc();
+                    if (remover != null) {
+                        boolean removido = cadDisciplina.removerDisciplina(remover);
+                        if (removido) {
+                            JOptionPane.showMessageDialog(null, "Disciplina removida do cadastro");
+                            System.gc();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Erro ao remover a disciplina.");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Disciplina não encontrada.");
                     }
                     break;
 
                 default:
+                    if (opcao != 0) {
+                        JOptionPane.showMessageDialog(null, "Opção inválida.");
+                    }
                     break;
             }
         } while (opcao != 0);
-        return;
     }
 
     public static Disciplina dadosNovaDisciplina() {
