@@ -19,7 +19,7 @@ public class Turma {
         this.salaTurma = salaTurma;
     }
 
-    // Métodos getters
+
     public String getDisciplinaMinistrada() {
         return disciplinaMinistrada;
     }
@@ -44,8 +44,8 @@ public class Turma {
         return salaTurma;
     }
 
-    // Método toString
-    @Override
+
+
     public String toString() {
         return "Turma [Disciplina: " + disciplinaMinistrada +
                 ", Código: " + codigoTurma +
@@ -55,8 +55,7 @@ public class Turma {
                 ", Sala: " + salaTurma + "]";
     }
 
-    // Método finalize (executado quando o objeto é destruído)
-    @Override
+
     protected void finalize() throws Throwable {
         try {
             // Código para limpar recursos, se necessário
