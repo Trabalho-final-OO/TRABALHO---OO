@@ -1,11 +1,12 @@
 package cadastros;
+
 import java.util.ArrayList;
 import java.util.List;
-
 import app.Aluno;
-public class CadastroAluno {
 
-    int numAlunos;
+public class CadastroAluno extends Cadastros {
+
+    private int numAlunos;
     private List<Aluno> alunos;
 
     public CadastroAluno() {
@@ -22,7 +23,7 @@ public class CadastroAluno {
     }
 
     public Aluno pesquisarAluno(String matriculaAluno) {
-        for (Aluno a: alunos) {
+        for (Aluno a : alunos) {
             if (a.getMatricula().equalsIgnoreCase(matriculaAluno)) {
                 return a;
             }
@@ -48,5 +49,20 @@ public class CadastroAluno {
         return resposta;
     }
 
+    public int cadastrar(Object o) {
+        return cadastrarAluno((Aluno) o);
+    }
 
+    public Object pesquisar(String s) {
+        return pesquisarAluno(s);
+    }
+
+    public boolean remover(Object o) {
+        return removerAluno((Aluno) o);
+    }
+
+    public boolean atualizar(String matricula, Object o) {
+        return atualizarAluno(matricula, (Aluno) o);
+    }
 }
+
