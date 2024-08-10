@@ -24,7 +24,7 @@ public class CadastroProfessor extends Cadastros {
 
     public Professor pesquisarProfessor(String matriculaFUB) {
         for (Professor p : professores) {
-            if (p.getMatricula().equalsIgnoreCase(matriculaFUB)) {
+            if (p.getMatriculaFUB().equalsIgnoreCase(matriculaFUB)) {
                 return p;
             }
         }

@@ -22,9 +22,9 @@ public class CadastroTurma extends Cadastros {
         return numTurmas;
     }
 
-    public Turma pesquisarTurma(String codigoTurma) {
+    public Turma pesquisarTurma(int codigoTurma) {
         for (Turma t : turmas) {
-            if (t.getCodigo().equalsIgnoreCase(codigoTurma)) {
+            if (t.getCodigo() == codigoTurma) {  // Comparar os códigos como inteiros
                 return t;
             }
         }
@@ -39,7 +39,7 @@ public class CadastroTurma extends Cadastros {
         return removeu;
     }
 
-    public boolean atualizarTurma(String codigoTurma, Turma t) {
+    public boolean atualizarTurma(int codigoTurma, Turma t) {
         boolean resposta = false;
         Turma remover = pesquisarTurma(codigoTurma);
         if (remover != null) {
@@ -54,7 +54,7 @@ public class CadastroTurma extends Cadastros {
     }
 
     public Object pesquisar(String s) {
-        return pesquisarTurma(s);
+        return pesquisarTurma(Integer.parseInt(s)); // Convertendo String para int
     }
 
     public boolean remover(Object o) {
@@ -62,6 +62,6 @@ public class CadastroTurma extends Cadastros {
     }
 
     public boolean atualizar(String codigo, Object o) {
-        return atualizarTurma(codigo, (Turma) o);
+        return atualizarTurma(Integer.parseInt(codigo), (Turma) o); // Convertendo String para int
     }
 }

@@ -19,7 +19,6 @@ public class Turma {
         this.salaTurma = salaTurma;
     }
 
-
     public String getDisciplinaMinistrada() {
         return disciplinaMinistrada;
     }
@@ -44,7 +43,10 @@ public class Turma {
         return salaTurma;
     }
 
-
+    // Método adicionado para evitar o erro "cannot find symbol method getCodigo()"
+    public int getCodigo() {
+        return codigoTurma;
+    }
 
     public String toString() {
         return "Turma [Disciplina: " + disciplinaMinistrada +
@@ -53,15 +55,6 @@ public class Turma {
                 ", Professor: " + professorTurma +
                 ", Hora: " + horaTurma +
                 ", Sala: " + salaTurma + "]";
-    }
-
-
-    protected void finalize() throws Throwable {
-        try {
-            // Código para limpar recursos, se necessário
-        } finally {
-            super.finalize();
-        }
     }
 
 }

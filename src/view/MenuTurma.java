@@ -1,7 +1,6 @@
 package view;
 
 import javax.swing.JOptionPane;
-
 import app.Turma;
 import cadastros.CadastroTurma;
 
@@ -62,7 +61,7 @@ public class MenuTurma {
     public static Turma dadosNovaTurma() {
         String disciplinaMinistrada = lerNomeDisciplinaMinistrada();
         int codigoTurma = lerCodigoTurma();
-        String alunoTurma = lerAlunoTurma(); // Supondo que o menu turma precisaria ler isso.
+        String alunoTurma = lerAlunoTurma();
         String professorTurma = lerProfessorTurma();
         String horaTurma = lerHoraTurma();
         String salaTurma = lerSalaTurma();

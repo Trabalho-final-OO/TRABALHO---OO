@@ -1,6 +1,6 @@
 package app;
 
-public class Professor extends PessoaFisica{
+public class Professor extends PessoaFisica {
 
     String areaFormacao,
             matriculaFUB;
@@ -19,4 +19,8 @@ public class Professor extends PessoaFisica{
         return matriculaFUB;
     }
 
+
+    public final String getMatricula() {
+        return getMatriculaFUB();
+    }
 }
