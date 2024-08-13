@@ -1,88 +1,170 @@
 package cadastros;
 
+import Exceptions.*;
+import app.Aluno;
+import app.Disciplina;
+import app.Professor;
+import app.Turma;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import app.Turma;
-import Exceptions.CampoEmBrancoException;
-import Exceptions.DisciplinaNaoAtribuidaException;
-import Exceptions.ProfessorNaoAtribuidoException;
 
-public class CadastroTurma extends Cadastros {
+public class CadastroTurma {
 
     private int numTurmas;
     private List<Turma> turmas;
+
 
     public CadastroTurma() {
         numTurmas = 0;
         turmas = new ArrayList<Turma>();
     }
 
-    public int cadastrarTurma(Turma t) throws CampoEmBrancoException, DisciplinaNaoAtribuidaException, ProfessorNaoAtribuidoException {
-        if (t.getDisciplinaMinistrada() == null || t.getDisciplinaMinistrada().trim().isEmpty()) {
-            throw new DisciplinaNaoAtribuidaException("A turma deve ter uma disciplina atribuída.");
-        }
-        if (t.getProfessorTurma() == null || t.getProfessorTurma().trim().isEmpty()) {
-            throw new ProfessorNaoAtribuidoException("A turma deve ter um professor atribuído.");
-        }
-        if (t.getAlunoTurma() == null || t.getAlunoTurma().trim().isEmpty()) {
-            throw new CampoEmBrancoException("A turma deve ter pelo menos um aluno.");
-        }
-        boolean cadastrou = turmas.add(t);
-        if (cadastrou) {
-            numTurmas = turmas.size();
-        }
-        return numTurmas;
-    }
+    public int cadastrarTurma(Turma turma, CadastroAluno cadAluno, CadastroProfessor cadProf, CadastroDisciplina cadDic) throws CampoEmBrancoException {
 
-    public Turma pesquisarTurma(int codigoTurma) {
-        for (Turma t : turmas) {
-            if (t.getCodigo() == codigoTurma) {  // Comparar os códigos como inteiros
-                return t;
+        String codigo = lerCodigo();
+
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new CampoEmBrancoException("Código da Turma não informado.");
+        }
+
+        turma.setHoraTurma(lerHora());
+        turma.setSalaTurma(lerSala());
+        turma.setCodigoTurma(Integer.parseInt(codigo));
+
+        String codigoDisciplina = lerCodigoDisciplina();
+        try {
+            Disciplina disciplina = cadDic.getDisciplinaByCodigo(codigoDisciplina);
+            turma.setDisciplinaMinistrada(disciplina);
+        } catch (DisciplinaNaoEncontradoException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return 0;
+        } catch (CampoEmBrancoException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return 0;
+        }
+
+        String matriculaFUB = lerMatriculaFUB();
+        try {
+            Professor prof = cadProf.getProfessorByMatricula(matriculaFUB);
+            turma.setProfessorTurma(prof);
+        } catch (ProfessorNaoEncontradoException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return 0;
+        } catch (CampoEmBrancoException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return 0;
+        }
+
+        List<Aluno> alunos = new ArrayList<Aluno>();
+        String matriculaAluno = "";
+        do {
+            matriculaAluno = lerAlunos();
+            if(alunos.size() == 0 && matriculaAluno.equals("0")) {
+                JOptionPane.showMessageDialog(null, "Erro: É preciso cadastrar pelo menos 1 aluno");
+                continue;
+            } else if (matriculaAluno.equals("0")) {
+                break;
             }
-        }
-        return null;
+            try {
+                Aluno aluno = cadAluno.getAlunoByMatricula(matriculaAluno);
+                alunos.add(aluno);
+            } catch (AlunoNaoAtribuidaException e) {
+                JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            } catch (CampoEmBrancoException e) {
+                JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            }
+        } while (!matriculaAluno.equals("0"));
+        turma.setAlunosTurma(alunos);
+
+        this.turmas.add(turma);
+        this.numTurmas = this.turmas.size();
+        return this.numTurmas;
     }
 
-    public boolean removerTurma(Turma t) {
+    public Turma pesquisarTurma(String codigoTurma) {
+        try {
+            Turma turma = getTurmaByCodigo(codigoTurma);
+            return turma;
+        } catch (TurmaNaoEncontradaException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return null;
+        } catch (CampoEmBrancoException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public boolean atualizarTurma(String codigo) {
+        try {
+            Turma turma = getTurmaByCodigo(codigo);
+            turma.setCodigoTurma(Integer.parseInt(lerCodigo()));
+            turma.setHoraTurma(lerHora());
+            turma.setSalaTurma(lerSala());
+        } catch (TurmaNaoEncontradaException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return false;
+        } catch (CampoEmBrancoException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean removerTurma(Turma p) {
         boolean removeu = false;
-        if (turmas.contains(t)) {
-            removeu = turmas.remove(t);
+        if (this.turmas.contains(p)) {
+            removeu = this.turmas.remove(p);
         }
         return removeu;
     }
 
-    public boolean atualizarTurma(int codigoTurma, Turma t) throws CampoEmBrancoException, DisciplinaNaoAtribuidaException, ProfessorNaoAtribuidoException {
-        if (t.getDisciplinaMinistrada() == null || t.getDisciplinaMinistrada().trim().isEmpty()) {
-            throw new DisciplinaNaoAtribuidaException("A turma deve ter uma disciplina atribuída.");
-        }
-        if (t.getProfessorTurma() == null || t.getProfessorTurma().trim().isEmpty()) {
-            throw new ProfessorNaoAtribuidoException("A turma deve ter um professor atribuído.");
-        }
-        if (t.getAlunoTurma() == null || t.getAlunoTurma().trim().isEmpty()) {
-            throw new CampoEmBrancoException("A turma deve ter pelo menos um aluno.");
-        }
-        boolean resposta = false;
-        Turma remover = pesquisarTurma(codigoTurma);
-        if (remover != null) {
-            turmas.remove(remover);
-            resposta = turmas.add(t);
-        }
-        return resposta;
+    // Funções auxiliares
+
+     public Turma getTurmaByCodigo(String codigo)  throws TurmaNaoEncontradaException, CampoEmBrancoException {
+         if (codigo == null) {
+             throw new CampoEmBrancoException("Código não informado");
+         }
+         for (Turma turma : this.turmas) {
+             String turmaCodigo = Integer.toString(turma.getCodigoTurma());
+             if (turmaCodigo.equals(codigo)) {
+                 return turma;
+             }
+         }
+         throw new TurmaNaoEncontradaException("Não há nenhuma turma com esse código");
+     }
+
+    public static String lerMatriculaFUB() {
+        return JOptionPane.showInputDialog("Informe a matrícula FUB do professor desta turma: ");
     }
 
-    public int cadastrar(Object o) throws CampoEmBrancoException, DisciplinaNaoAtribuidaException, ProfessorNaoAtribuidoException {
-        return cadastrarTurma((Turma) o);
+    public static String lerAlunos() {
+        return JOptionPane.showInputDialog("Informe a matrícula do aluno para adicionar a turma ou digite 0 prosseguir: ");
     }
 
-    public Object pesquisar(String s) {
-        return pesquisarTurma(Integer.parseInt(s)); // Convertendo String para int
+    public static String lerCodigo() {
+        return JOptionPane.showInputDialog("Informe o código da turma: ");
     }
 
-    public boolean remover(Object o) {
-        return removerTurma((Turma) o);
+    private static String lerHora() {
+        return JOptionPane.showInputDialog("Informe o horário da turma: ");
     }
 
-    public boolean atualizar(String codigo, Object o) throws CampoEmBrancoException, DisciplinaNaoAtribuidaException, ProfessorNaoAtribuidoException {
-        return atualizarTurma(Integer.parseInt(codigo), (Turma) o);
+    private static String lerSala() {
+        return JOptionPane.showInputDialog("Informe a sala da turma: ");
     }
+
+    private  static String lerCodigoDisciplina() {
+        return JOptionPane.showInputDialog("Informe o código da disciplina: ");
+    }
+
+    // Validação
+
+    public void validaTurmaCadastrada() throws NaoHaTurmaCadastradaException {
+        if (this.numTurmas < 1) {
+            throw new NaoHaTurmaCadastradaException("Nenhuma turma foi cadastra ainda");
+        }
+    }
+
 }

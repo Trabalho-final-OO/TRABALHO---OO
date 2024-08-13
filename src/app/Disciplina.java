@@ -4,14 +4,12 @@ public class Disciplina {
     private String nomeDisciplina;
     private String codigoDisciplina;
     private String cargaHoraria;
-    private int turmaDisciplina;
 
 
-    public Disciplina(String nomeDisciplina, String codigoDisciplina, String cargaHoraria, int turmaDisciplina) {
+    public Disciplina(String nomeDisciplina, String codigoDisciplina, String cargaHoraria) {
         this.nomeDisciplina = nomeDisciplina;
         this.codigoDisciplina = codigoDisciplina;
         this.cargaHoraria = cargaHoraria;
-        this.turmaDisciplina = turmaDisciplina;
     }
 
 
@@ -27,27 +25,22 @@ public class Disciplina {
         return cargaHoraria;
     }
 
-    public int getTurmaDisciplina() {
-        return turmaDisciplina;
+    public void setCodigoDisciplina(String codigoDisciplina) {
+        this.codigoDisciplina = codigoDisciplina;
     }
 
+    public void setNomeDisciplina(String nomeDisciplina) {
+        this.nomeDisciplina = nomeDisciplina;
+    }
 
+    public void setCargaHoraria(String cargaHoraria) {
+        this.cargaHoraria = cargaHoraria;
+    }
 
     public String toString() {
         return "Disciplina: " + nomeDisciplina +
                 ", Código: " + codigoDisciplina +
-                ", Carga Horária: " + cargaHoraria +
-                ", Turma: " + turmaDisciplina;
+                ", Carga Horária: " + cargaHoraria;
     }
 
-
-
-    protected void finalize() throws Throwable {
-        try {
-            // Código para limpar recursos, se necessário
-        } finally {
-            super.finalize();
-        }
-    }
 }
-

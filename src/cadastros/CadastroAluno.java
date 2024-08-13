@@ -1,9 +1,13 @@
 package cadastros;
 
+import Exceptions.AlunoNaoAtribuidaException;
+import Exceptions.CampoEmBrancoException;
+import Exceptions.NaoHaAlunoCadastradoException;
+import app.Aluno;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import app.Aluno;
-import Exceptions.CampoEmBrancoException;
 
 public class CadastroAluno extends Cadastros {
 
@@ -15,52 +19,112 @@ public class CadastroAluno extends Cadastros {
         alunos = new ArrayList<Aluno>();
     }
 
-    public int cadastrarAluno(Aluno a) throws CampoEmBrancoException {
-        if (a.getNome() == null || a.getNome().trim().isEmpty()) {
-            throw new CampoEmBrancoException("Nome do aluno não pode estar em branco.");
+    public int cadastrarAluno(Aluno aluno) throws CampoEmBrancoException {
+        String nome = lerNome();
+        String matricula = lerMatricula();
+
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new CampoEmBrancoException("Nome do Aluno não pode estar em branco.");
         }
-        if (a.getMatricula() == null || a.getMatricula().trim().isEmpty()) {
-            throw new CampoEmBrancoException("Matrícula do aluno não pode estar em branco.");
+        if (matricula == null || matricula.trim().isEmpty()) {
+            throw new CampoEmBrancoException("Matrícula do Aluno não pode estar em branco.");
         }
-        boolean cadastrou = alunos.add(a);
-        if (cadastrou) {
-            numAlunos = alunos.size();
-        }
-        return numAlunos;
+
+        aluno.setNome(nome);
+        aluno.setMatricula(matricula);
+        aluno.setCpf(lerCPF());
+        aluno.setEmail(lerEmail());
+        aluno.setCurso(lerCurso());
+
+        this.alunos.add(aluno);
+        this.numAlunos = this.alunos.size();
+        return this.numAlunos;
     }
 
-    public Aluno pesquisarAluno(String matriculaAluno) {
-        for (Aluno a : alunos) {
-            if (a.getMatricula().equalsIgnoreCase(matriculaAluno)) {
-                return a;
-            }
+    public Aluno pesquisarAluno(String matricula) {
+        try {
+            Aluno aluno = getAlunoByMatricula(matricula);
+            return aluno;
+        } catch (AlunoNaoAtribuidaException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return null;
+        } catch (CampoEmBrancoException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return null;
         }
-        return null;
     }
 
-    public boolean removerAluno(Aluno a) {
+    public boolean removerAluno(Aluno aluno) {
         boolean removeu = false;
-        if (alunos.contains(a)) {
-            removeu = alunos.remove(a);
+        if (this.alunos.contains(aluno)) {
+            removeu = this.alunos.remove(aluno);
         }
         return removeu;
     }
 
-    public boolean atualizarAluno(String matricula, Aluno a) throws CampoEmBrancoException {
-        if (a.getNome() == null || a.getNome().trim().isEmpty()) {
-            throw new CampoEmBrancoException("Nome do aluno não pode estar em branco.");
+    public boolean atualizarAluno(String matricula) {
+        try {
+            Aluno aluno = getAlunoByMatricula(matricula);
+            aluno.setNome(lerNome());
+            aluno.setCpf(lerCPF());
+            aluno.setEmail(lerEmail());
+            aluno.setMatricula(lerMatricula());
+            aluno.setCurso(lerCurso());
+        } catch (AlunoNaoAtribuidaException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return false;
+        } catch (CampoEmBrancoException e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            return false;
         }
-        if (a.getMatricula() == null || a.getMatricula().trim().isEmpty()) {
-            throw new CampoEmBrancoException("Matrícula do aluno não pode estar em branco.");
-        }
-        boolean resposta = false;
-        Aluno remover = pesquisarAluno(matricula);
-        if (remover != null) {
-            alunos.remove(remover);
-            resposta = alunos.add(a);
-        }
-        return resposta;
+        return true;
     }
+
+    // Funções auxiliares
+
+    public Aluno getAlunoByMatricula(String matricula)  throws AlunoNaoAtribuidaException, CampoEmBrancoException {
+        if (matricula == null) {
+            throw new CampoEmBrancoException("Matricula não informada");
+        }
+        for (Aluno aluno : this.alunos) {
+            String alunoMatricula = aluno.getMatricula();
+            System.out.println(alunoMatricula);
+            if (alunoMatricula.equals(matricula)) {
+                return aluno;
+            }
+        }
+        throw new AlunoNaoAtribuidaException("Não há nenhum aluno com essa matricula");
+    }
+
+    private static String lerNome() {
+        return JOptionPane.showInputDialog("Informe o nome do aluno: ");
+    }
+
+    private static String lerCPF() {
+        return JOptionPane.showInputDialog("Informe o CPF do aluno: ");
+    }
+
+    private static String lerEmail() {
+        return JOptionPane.showInputDialog("Informe o email do aluno: ");
+    }
+
+    public static String lerMatricula() {
+        return JOptionPane.showInputDialog("Informe a matrícula do aluno: ");
+    }
+
+    private static String lerCurso() {
+        return JOptionPane.showInputDialog("Informe o curso do aluno: ");
+    }
+
+    // Validação
+
+    public void validaAlunoCadastrado() throws NaoHaAlunoCadastradoException {
+        if (this.numAlunos < 1) {
+            throw new NaoHaAlunoCadastradoException("Nenhum aluno foi cadastro ainda");
+        }
+    }
+
+    // Declaração das classes abstratas
 
     public int cadastrar(Object o) throws CampoEmBrancoException {
         return cadastrarAluno((Aluno) o);
@@ -74,7 +138,7 @@ public class CadastroAluno extends Cadastros {
         return removerAluno((Aluno) o);
     }
 
-    public boolean atualizar(String matricula, Object o) throws CampoEmBrancoException {
-        return atualizarAluno(matricula, (Aluno) o);
+    public boolean atualizar(String matricula){
+            return atualizarAluno(matricula);
     }
 }

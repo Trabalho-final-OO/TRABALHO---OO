@@ -1,25 +1,27 @@
 package app;
 
+import java.util.List;
+
 public class Turma {
-    private String disciplinaMinistrada;
+    private Disciplina disciplinaMinistrada;
     private int codigoTurma;
-    private String alunoTurma;
-    private String professorTurma;
+    private List<Aluno> alunosTurma;
+    private Professor professorTurma;
     private String horaTurma;
     private String salaTurma;
 
     // Construtor
-    public Turma(String disciplinaMinistrada, int codigoTurma, String alunoTurma,
-                 String professorTurma, String horaTurma, String salaTurma) {
+    public Turma(Disciplina disciplinaMinistrada, int codigoTurma, List<Aluno> alunosTurma,
+                 Professor professorTurma, String horaTurma, String salaTurma) {
         this.disciplinaMinistrada = disciplinaMinistrada;
         this.codigoTurma = codigoTurma;
-        this.alunoTurma = alunoTurma;
+        this.alunosTurma = alunosTurma;
         this.professorTurma = professorTurma;
         this.horaTurma = horaTurma;
         this.salaTurma = salaTurma;
     }
 
-    public String getDisciplinaMinistrada() {
+    public Disciplina getDisciplinaMinistrada() {
         return disciplinaMinistrada;
     }
 
@@ -27,11 +29,11 @@ public class Turma {
         return codigoTurma;
     }
 
-    public String getAlunoTurma() {
-        return alunoTurma;
+    public List<Aluno> getAlunosTurma() {
+        return alunosTurma;
     }
 
-    public String getProfessorTurma() {
+    public Professor getProfessorTurma() {
         return professorTurma;
     }
 
@@ -43,18 +45,36 @@ public class Turma {
         return salaTurma;
     }
 
-    // Método adicionado para evitar o erro "cannot find symbol method getCodigo()"
-    public int getCodigo() {
-        return codigoTurma;
+    public void setDisciplinaMinistrada(Disciplina disciplinaMinistrada) {
+        this.disciplinaMinistrada =  disciplinaMinistrada;
+    }
+
+    public void setCodigoTurma(int codigoTurma) {
+        this.codigoTurma =  codigoTurma;
+    }
+
+    public void setAlunosTurma(List<Aluno> alunosTurma) {
+        this.alunosTurma =  alunosTurma;
+    }
+
+    public void setProfessorTurma(Professor professorTurma) {
+        this.professorTurma =  professorTurma;
+    }
+
+    public void setHoraTurma(String horaTurma) {
+        this.horaTurma =  horaTurma;
+    }
+
+    public void setSalaTurma(String salaTurma) {
+        this.salaTurma =  salaTurma;
     }
 
     public String toString() {
-        return "Turma [Disciplina: " + disciplinaMinistrada +
-                ", Código: " + codigoTurma +
-                ", Aluno: " + alunoTurma +
-                ", Professor: " + professorTurma +
-                ", Hora: " + horaTurma +
-                ", Sala: " + salaTurma + "]";
+        return "Turma: \nDisciplina: " + disciplinaMinistrada.getNomeDisciplina() + "\n" +
+                "Código: " + codigoTurma + "\n" +
+                "Professor: " + professorTurma.getNome() + "\n" +
+                "Hora: " + horaTurma + "\n" +
+                "Sala: " + salaTurma;
     }
 
 }

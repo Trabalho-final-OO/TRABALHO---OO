@@ -1,16 +1,14 @@
 import javax.swing.JOptionPane;
-import cadastros.CadastroProfessor;
+
 import cadastros.CadastroAluno;
 import cadastros.CadastroDisciplina;
+import cadastros.CadastroProfessor;
 import cadastros.CadastroTurma;
-import view.MenuAluno;
-import view.MenuPrincipal;
-import view.MenuProfessor;
-import view.MenuDisciplina;
-import view.MenuTurma;
+import view.*;
 import Exceptions.CampoEmBrancoException;
 import Exceptions.DisciplinaNaoAtribuidaException;
 import Exceptions.ProfessorNaoAtribuidoException;
+
 public class  Principal {
 
     static CadastroAluno cadAluno;
@@ -39,7 +37,7 @@ public class  Principal {
                     MenuDisciplina.menuDisciplina(cadDisc);
                     break;
                 case 4:
-                    MenuTurma.menuTurma(cadTurma);
+                    MenuTurma.menuTurma(cadTurma, cadAluno, cadProf, cadDisc);
                     break;
                 case 0:
                     break;

@@ -1,9 +1,12 @@
 package view;
 
-import javax.swing.JOptionPane;
+import Exceptions.CampoEmBrancoException;
+import Exceptions.NaoHaDisciplinaCadastradoException;
+import Exceptions.DisciplinaNaoEncontradoException;
 import app.Disciplina;
 import cadastros.CadastroDisciplina;
-import Exceptions.CampoEmBrancoException;
+
+import javax.swing.*;
 
 public class MenuDisciplina {
 
@@ -23,52 +26,57 @@ public class MenuDisciplina {
             switch (opcao) {
                 case 1:
                     try {
-                        Disciplina novaDisciplina = dadosNovaDisciplina();
-                        cadDisciplina.cadastrarDisciplina(novaDisciplina);
-                        JOptionPane.showMessageDialog(null, "Disciplina cadastrada com sucesso!");
+                        Disciplina novoDisciplina = new Disciplina(null, null, null);
+                        int numDisciplinaes = cadDisciplina.cadastrarDisciplina(novoDisciplina);
+                        JOptionPane.showMessageDialog(null, "Disciplina cadastrado com sucesso!");
+                        JOptionPane.showMessageDialog(null, novoDisciplina.toString());
+                        JOptionPane.showMessageDialog(null, "Agora você possui " + numDisciplinaes + " cadastrados");
                     } catch (CampoEmBrancoException e) {
                         JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
                     }
                     break;
 
                 case 2:
-                    String codigoDisciplina = lerCodigoDisciplina();
-                    Disciplina d = cadDisciplina.pesquisarDisciplina(codigoDisciplina);
-                    if (d != null) {
-                        JOptionPane.showMessageDialog(null, d.toString());
+                    try {
+                        cadDisciplina.validaDisciplinaCadastrado();
+                    } catch (NaoHaDisciplinaCadastradoException e) {
+                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                        break;
+                    }
+                    String codigo = cadDisciplina.lerCodigoDisciplina();
+                    Disciplina p = cadDisciplina.pesquisarDisciplina(codigo);
+                    if (p != null) {
+                        JOptionPane.showMessageDialog(null, p.toString());
                     } else {
-                        JOptionPane.showMessageDialog(null, "Disciplina não encontrada.");
+                        JOptionPane.showMessageDialog(null, "Disciplina não encontrado.");
                     }
                     break;
 
                 case 3:
-                    try {
-                        codigoDisciplina = lerCodigoDisciplina();
-                        Disciplina novoCadastro = dadosNovaDisciplina();
-                        boolean atualizado = cadDisciplina.atualizarDisciplina(codigoDisciplina, novoCadastro);
-                        if (atualizado) {
-                            JOptionPane.showMessageDialog(null, "Cadastro atualizado.");
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Disciplina não encontrada.");
-                        }
-                    } catch (CampoEmBrancoException e) {
-                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                    codigo = cadDisciplina.lerCodigoDisciplina();
+                    boolean atualizado = cadDisciplina.atualizarDisciplina(codigo);
+                    if (atualizado) {
+                        JOptionPane.showMessageDialog(null, "Disciplina atualizado.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Disciplina não atualizado.");
                     }
                     break;
 
                 case 4:
-                    codigoDisciplina = lerCodigoDisciplina();
-                    Disciplina remover = cadDisciplina.pesquisarDisciplina(codigoDisciplina);
-                    if (remover != null) {
-                        boolean removido = cadDisciplina.removerDisciplina(remover);
+                    codigo = cadDisciplina.lerCodigoDisciplina();
+                    try {
+                        Disciplina disciplinaARemover = cadDisciplina.getDisciplinaByCodigo(codigo);
+                        boolean removido = cadDisciplina.removerDisciplina(disciplinaARemover);
                         if (removido) {
-                            JOptionPane.showMessageDialog(null, "Disciplina removida do cadastro");
+                            JOptionPane.showMessageDialog(null, "Disciplina removido do cadastro");
                             System.gc();
                         } else {
-                            JOptionPane.showMessageDialog(null, "Erro ao remover a disciplina.");
+                            JOptionPane.showMessageDialog(null, "Erro ao remover o disciplina.");
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Disciplina não encontrada.");
+                    } catch (DisciplinaNaoEncontradoException e) {
+                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                    } catch (CampoEmBrancoException e) {
+                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
                     }
                     break;
 
@@ -79,30 +87,5 @@ public class MenuDisciplina {
                     break;
             }
         } while (opcao != 0);
-    }
-
-    public static Disciplina dadosNovaDisciplina() {
-        String nomeDisciplina = lerNomeDisciplina();
-        String codigoDisciplina = lerCodigoDisciplina();
-        String cargaHoraria = lerCargaHoraria();
-        int turmaDisciplina = lerTurmaDisciplina();
-        return new Disciplina(nomeDisciplina, codigoDisciplina, cargaHoraria, turmaDisciplina);
-    }
-
-    private static String lerNomeDisciplina() {
-        return JOptionPane.showInputDialog("Informe o nome da disciplina: ");
-    }
-
-    private static String lerCodigoDisciplina() {
-        return JOptionPane.showInputDialog("Informe o código da disciplina: ");
-    }
-
-    private static String lerCargaHoraria() {
-        return JOptionPane.showInputDialog("Informe a carga horária da disciplina: ");
-    }
-
-    private static int lerTurmaDisciplina() {
-        String turma = JOptionPane.showInputDialog("Informe o código da turma: ");
-        return Integer.parseInt(turma);
     }
 }

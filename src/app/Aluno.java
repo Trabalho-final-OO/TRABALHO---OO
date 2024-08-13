@@ -1,27 +1,30 @@
 package app;
 
-public class Aluno extends PessoaFisica{
+public class Aluno extends PessoaFisica {
 
-    String matricula,
-            curso;
+    private String matricula;
+    private String curso;
 
-    public Aluno(String nome, String cpf, String email, String matricula, String curso) {
+    public Aluno(String nome, String cpf, String email, String curso, String matricula) {
         super(nome, cpf, email);
         this.matricula = matricula;
         this.curso = curso;
     }
 
-    public final String getMatricula() {
+    public String getMatricula() {
         return matricula;
     }
 
-    public final String getCurso() {
+    public String getCurso() {
         return curso;
     }
 
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }
 
-    protected void finalize() throws Throwable {
-        System.out.println("Destruindo objeto: " + this);
+    public void setCurso(String curso) {
+        this.curso = curso;
     }
 
     public String toString() {
@@ -30,5 +33,5 @@ public class Aluno extends PessoaFisica{
         resposta += "CURSO: " + curso + '\n';
         return resposta;
     }
-
 }
+

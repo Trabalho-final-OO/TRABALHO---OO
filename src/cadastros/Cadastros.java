@@ -8,5 +8,5 @@ public abstract class Cadastros {
 
     public abstract boolean remover(Object o);
 
-    public abstract boolean atualizar(String codigo, Object o) throws Exception;
+    public abstract boolean atualizar(String codigo);
 }
